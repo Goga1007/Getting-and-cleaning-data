@@ -5,16 +5,16 @@
 
 library(data.table)
 ## reading the tables from downloaded datasets and saving them under new names for merging 
-featureNames <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/features.txt")
-activityLabels <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/activity_labels.txt", header = FALSE)
+featureNames <- read.table("C:/features.txt")
+activityLabels <- read.table("C:/activity_labels.txt", header = FALSE)
 #reading train data
-subjectTrain <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/subject_train.txt", header = FALSE)
-activityTrain <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/y_train.txt", header = FALSE)
-featuresTrain <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/train/X_train.txt", header = FALSE)
+subjectTrain <- read.table("C:/subject_train.txt", header = FALSE)
+activityTrain <- read.table("C:/train/y_train.txt", header = FALSE)
+featuresTrain <- read.table("C:/train/X_train.txt", header = FALSE)
 #reading test data
-subjectTest <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/subject_test.txt", header = FALSE)
-activityTest <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/y_test.txt", header = FALSE)
-featuresTest <- read.table("C:/Users/gogab/Documents/R Studio files/getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset/test/X_test.txt", header = FALSE)
+subjectTest <- read.table("C:/subject_test.txt", header = FALSE)
+activityTest <- read.table("C:/y_test.txt", header = FALSE)
+featuresTest <- read.table("C:/X_test.txt", header = FALSE)
 
 ## 1. Merges the training and the test sets to create one data set.
 subject <- rbind(subjectTrain, subjectTest)
@@ -73,7 +73,7 @@ extractedData <- data.table(extractedData)
 # Tidy Data for average on each activity and subject
 tidyData <- aggregate(. ~Subject + Activity, extractedData, mean)
 tidyData <- tidyData[order(tidyData$Subject,tidyData$Activity),]
-write.table(tidyData, file = "tidyData.txt", row.names = FALSE)
+write.table(tidyData, file = "c:/tidyData.txt", row.names = FALSE)
 # export tidyData
 str(tidyData)
 tidyData
