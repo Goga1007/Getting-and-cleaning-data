@@ -1,79 +1,32 @@
-# Getting-and-cleaning-data
-## 5 steps of getting and cleaning data for peer graded assignment 
-# Download the data set
-#Data set downloaded and extracted under the folder called getdata_projectfiles_UCI HAR Dataset/UCI HAR Dataset
 
-library(data.table)
-## reading the tables from downloaded datasets and saving them under new names for merging 
-featureNames <- read.table("C:/features.txt")
-activityLabels <- read.table("C:/activity_labels.txt", header = FALSE)
-#reading train data
-subjectTrain <- read.table("C:/subject_train.txt", header = FALSE)
-activityTrain <- read.table("C:/train/y_train.txt", header = FALSE)
-featuresTrain <- read.table("C:/train/X_train.txt", header = FALSE)
-#reading test data
-subjectTest <- read.table("C:/subject_test.txt", header = FALSE)
-activityTest <- read.table("C:/y_test.txt", header = FALSE)
-featuresTest <- read.table("C:/X_test.txt", header = FALSE)
+##Getting and Cleaning Data - peer assessment project
 
-## 1. Merges the training and the test sets to create one data set.
-subject <- rbind(subjectTrain, subjectTest)
-activity <- rbind(activityTrain, activityTest)
-features <- rbind(featuresTrain, featuresTest)
+The purpose of this project is to demonstrate your ability to collect, work with, and clean a data set. The goal is to prepare tidy data that can be used for later analysis. You will be graded by your peers on a series of yes/no questions related to the project. You will be required to submit: 1) a tidy data set as described below, 2) a link to a Github repository with your script for performing the analysis, and 3) a code book that describes the variables, the data, and any transformations or work that you performed to clean up the data called CodeBook.md. You should also include a README.md in the repo with your scripts. This repo explains how all of the scripts work and how they are connected.
 
-##nameing the columns from metadata info
-colnames(features) <- t(featureNames[2])
+One of the most exciting areas in all of data science right now is wearable computing - see for example this article . Companies like Fitbit, Nike, and Jawbone Up are racing to develop the most advanced algorithms to attract new users. The data linked to from the course website represent data collected from the accelerometers from the Samsung Galaxy S smartphone. A full description is available at the site where the data was obtained:
 
-## merging data
-colnames(activity) <- "Activity"
-colnames(subject) <- "Subject"
-completeData <- cbind(features,activity,subject)
-## head(completeData) to check if the data is uploaded and merged for further analysis
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
-## 2. Extracts only the measurements on the mean and standard deviation for each measurement. 
-columnsWithMeanSTD <- grep(".*Mean.*|.*Std.*", names(completeData), ignore.case=TRUE)
-## adding two new columns after the last one with mean and std
-requiredColumns <- c(columnsWithMeanSTD, 562, 563)
-dim(completeData)
-## extract selected data
-extractedData <- completeData[,requiredColumns]
-dim(extractedData)
+Here are the data for the project:
 
-## 3. Uses descriptive activity names to name the activities in the data set
-extractedData$Activity <- as.character(extractedData$Activity)
-for (i in 1:6){
-  extractedData$Activity[extractedData$Activity == i] <- as.character(activityLabels[i,2])
-}
-## Variable names made as factors
-extractedData$Activity <- as.factor(extractedData$Activity)
-#descriptive variable names
-names(extractedData)
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 
-## 4.Appropriately labels the data set with descriptive variable names. 
-## changing the variable names to be more descriptive and understandable
-names(extractedData) <- gsub("Acc", "Accelerometer", names(extractedData))
-names(extractedData) <- gsub("Gyro", "Gyroscope", names(extractedData))
-names(extractedData) <- gsub("BodyBody", "Body", names(extractedData))
-names(extractedData) <- gsub("Mag", "Magnitude", names(extractedData))
-names(extractedData) <- gsub("^t", "Time", names(extractedData))
-names(extractedData) <- gsub("^f", "Frequency", names(extractedData))
-names(extractedData) <- gsub("tBody", "TimeBody", names(extractedData))
-names(extractedData) <- gsub("-mean()", "Mean", names(extractedData), ignore.case = TRUE)
-names(extractedData) <- gsub("-std()", "STD", names(extractedData), ignore.case = TRUE)
-names(extractedData) <- gsub("-freq()", "Frequency", names(extractedData), ignore.case = TRUE)
-names(extractedData) <- gsub("angle", "Angle", names(extractedData))
-names(extractedData) <- gsub("gravity", "Gravity", names(extractedData))
-#The results
-names(extractedData)
+You should create one R script called run_analysis.R that does the following.
 
-## 5. From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-# setting the subject as a factor variable
-extractedData$Subject <- as.factor(extractedData$Subject)
-extractedData <- data.table(extractedData)
-# Tidy Data for average on each activity and subject
-tidyData <- aggregate(. ~Subject + Activity, extractedData, mean)
-tidyData <- tidyData[order(tidyData$Subject,tidyData$Activity),]
-write.table(tidyData, file = "c:/tidyData.txt", row.names = FALSE)
-# export tidyData
-str(tidyData)
-tidyData
+Merges the training and the test sets to create one data set.
+Extracts only the measurements on the mean and standard deviation for each measurement.
+Uses descriptive activity names to name the activities in the data set
+Appropriately labels the data set with descriptive variable names.
+From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+#In the run_analysis.R script, were recreated each step.
+
+This file 'run_analysis.R' contains all the code to perform the analyses described in the 5 steps. They can be launched in RStudio by just importing the file.
+
+About this R script
+File with R code "run_analysis.R" perform 5 following steps (in accordance assigned task of course work):
+
+1. Merging the training and the test sets to create one data set.
+2. Extracting only the measurements on the mean and standard deviation for each measurement
+3. Using descriptive activity names to name the activities in the data set
+4. Appropriately labeling the data set with descriptive variable names
+5. Creating a second, independent tidy data set with the average of each variable for each activity and each subject
